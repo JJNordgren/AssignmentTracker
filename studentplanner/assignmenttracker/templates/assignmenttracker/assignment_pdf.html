@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #222;
+        }
+
+        h1, h2, h3, p {
+            margin: 0;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .muted {
+            color: #666;
+        }
+
+        .date-section {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            padding: 8px 10px;
+            background-color: #f1f3f5;
+            border-left: 5px solid #343a40;
+        }
+
+        .assignment {
+            margin-bottom: 12px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-left-width: 8px;
+        }
+
+        .priority-high {
+            border-left-color: #dc3545;
+        }
+
+        .priority-medium {
+            border-left-color: #ffc107;
+        }
+
+        .priority-low {
+            border-left-color: #198754;
+        }
+
+        .priority-label {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 4px;
+            color: #fff;
+        }
+
+        .priority-label-high {
+            background-color: #dc3545;
+        }
+
+        .priority-label-medium {
+            background-color: #f0ad4e;
+        }
+
+        .priority-label-low {
+            background-color: #198754;
+        }
+
+        .meta {
+            margin-top: 6px;
+        }
+
+        .meta span {
+            display: inline-block;
+            margin-right: 14px;
+        }
+
+        .description {
+            margin-top: 8px;
+        }
+
+        .note {
+            margin-top: 8px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Assignment To-Do List</h1>
+        <p class="muted">Generated for {{ user.username }}</p>
+        <p class="muted">{{ generated_on|date:"M d, Y g:i A" }}</p>
+        <p class="note">Completed assignments are not included in this export.</p>
+    </div>
+
+    {% for assignment in assignments %}
+        {% ifchanged assignment.due_date %}
+            <div class="date-section">
+                <h2>{{ assignment.due_date|date:"l, F d, Y" }}</h2>
+            </div>
+        {% endifchanged %}
+
+        <div class="assignment {% if assignment.priority == 1 %}priority-high{% elif assignment.priority == 2 %}priority-medium{% else %}priority-low{% endif %}">
+            <h3>{{ assignment.title }}</h3>
+
+            <div class="meta">
+                <span><strong>Course:</strong>
+                    {% if assignment.course %}
+                        {{ assignment.course }}
+                    {% else %}
+                        No Course
+                    {% endif %}
+                </span>
+
+                <span><strong>Due:</strong> {{ assignment.due_date|date:"M d, Y" }}</span>
+
+                <span>
+                    <strong>Priority:</strong>
+                    {% if assignment.priority == 1 %}
+                        <span class="priority-label priority-label-high">High</span>
+                    {% elif assignment.priority == 2 %}
+                        <span class="priority-label priority-label-medium">Medium</span>
+                    {% else %}
+                        <span class="priority-label priority-label-low">Low</span>
+                    {% endif %}
+                </span>
+            </div>
+
+            {% if assignment.description %}
+                <div class="description">
+                    <strong>Description:</strong> {{ assignment.description }}
+                </div>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No incomplete assignments matched the current filters.</p>
+    {% endfor %}
+</body>
+</html>

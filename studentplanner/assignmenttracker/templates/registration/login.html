@@ -1,0 +1,46 @@
+{% extends 'assignmenttracker/base.html' %}
+
+{% block title %}Login | Assignment Tracker{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-4">Login</h1>
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
+                        {{ form.username }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.password.id_for_label }}">Password</label>
+                        {{ form.password }}
+                    </div>
+
+                    {% if next %}
+                        <input type="hidden" name="next" value="{{ next }}">
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+
+                <p class="mt-3 mb-0 text-muted">
+                    Need an account?
+                    <a href="{% url 'signup' %}">Sign up here</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
